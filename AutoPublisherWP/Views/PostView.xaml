@@ -1,0 +1,115 @@
+﻿<UserControl x:Class="AutoPublisherWP.Views.PostView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:local="clr-namespace:AutoPublisherWP.Views"
+             xmlns:ViewModels="clr-namespace:AutoPublisherWP.ViewModels"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid x:Name="Grilla">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="2*"/>
+            <RowDefinition/>
+            <RowDefinition Height="3*"/>
+        </Grid.RowDefinitions>
+        <Grid x:Name="ImageGrid" Grid.Row="0" Margin="5,5">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Calendar x:Name="CalendarControl"
+                IsTodayHighlighted="True" 
+                      Grid.Row="0" 
+                      Grid.RowSpan="5"
+                      Grid.Column="0" 
+                      SelectionMode="SingleDate" 
+                      SelectedDate="{Binding Post.Date, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                      SelectedDatesChanged="CalendarControl_SelectedDatesChanged"
+                      />
+            <Image x:Name="ImageControl" 
+                   Grid.Row="0" 
+                   Margin="5,5" 
+                   Grid.RowSpan="4"
+                   Grid.Column="1"/>
+            <Label x:Name="LblRutaImagenes"
+                   Grid.Row="4"
+                   Grid.Column="1"
+                   Content="{Binding WatchedFolder, UpdateSourceTrigger=PropertyChanged}"
+                   >
+            </Label>
+            <Button x:Name="UploadButton" 
+                    Content="Cargar Imagen" 
+                    Grid.Column="2" 
+                    Margin="5,5"  Click="UploadButton_Click"/>
+            <Button x:Name="DeleteButton" Content="Borrar esta imagen" Grid.Column="2" 
+                     Margin="5,5" Grid.Row="1"  Click="DeleteButton_Click"/>
+            <CheckBox Content="Sin imagen" 
+                      Grid.Row="2" 
+                      Grid.Column="3" 
+                      Margin="5,5"
+                      IsChecked="{Binding Post.WithoutImage,UpdateSourceTrigger=PropertyChanged}"/>
+            <CheckBox 
+                    x:Name="ChkAutoImage"
+                    Content="Imagenes Automaticas"
+                    Grid.Column="2" 
+                    Grid.Row="3"
+                    Margin="5,5"
+                    IsChecked="{Binding AutoImage, UpdateSourceTrigger=PropertyChanged}">
+            </CheckBox>
+            <Button x:Name="BtnRutaImagenes"
+                    Grid.Column="2"
+                    Grid.Row="4"
+                    Content="Ruta Archivos"
+                    Margin="5,5" Click="BtnRutaImagenes_Click"></Button>
+        </Grid>
+        <Grid x:Name="TitleGrid" Grid.Row="1" >
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Label Content="Titulo de la publicación" Grid.Row="0" Margin="5,5"/>
+            <RichTextBox x:Name="TitleText"
+                         Grid.Row="1"
+                         Margin="5,5"
+                         Controls:TextBoxHelper.ClearTextButton="True"
+                         Controls:TextBoxHelper.Watermark="El titulo va aca..." TextChanged="TitleText_TextChanged"/>
+            <Button x:Name="DeleteTitleButton" Content="Borrar esta texto" Grid.Column="1"  Margin="5,5"  Click="DeleteTitleButton_Click"/>
+            <Button x:Name="DeleteAndCopyButton" Content="Borrar y pegar" Grid.Column="1" Grid.Row="1"  Margin="5,5" Click="DeleteAndCopyButton_Click"  />
+        </Grid>
+        <Grid x:Name="ContentGrid" Grid.Row="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Label Content="Contenido de la publicación" Grid.Row="0" Margin="5,5"/>
+            <RichTextBox x:Name="ContentText"
+                         Grid.Row="1"
+                         Grid.RowSpan="2"
+                         Margin="5,5"
+                         Controls:TextBoxHelper.ClearTextButton="True"
+                         Controls:TextBoxHelper.Watermark="El contenido va aca, no te preocupes, se agranda solo..." TextChanged="ContentText_TextChanged"/>
+            <Button x:Name="DeleteContentButton" Content="Borrar este texto" Grid.Row="0" Grid.Column="1"  Margin="5,5"  VerticalAlignment="Top" Click="DeleteContentButton_Click"/>
+            <Button x:Name="DeleteAndCopyContentButton" Content="Borrar y pegar" Grid.Row="1" Grid.Column="1"  Margin="5,5"  VerticalAlignment="Top" Click="DeleteAndCopyContentButton_Click"/>
+            <Button x:Name="CopyAllText" Content="Borrar y copiar todo" Grid.Row="2" Grid.Column="1"  Margin="5,5"  VerticalAlignment="Top" Click="CopyAllText_Click" />
+        </Grid>
+    </Grid>
+</UserControl>
