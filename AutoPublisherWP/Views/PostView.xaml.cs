@@ -26,22 +26,17 @@ namespace AutoPublisherWP.Views
     public partial class PostView : UserControl
     {
         public MainWindowVM ThisViewModel = null;
-        SharpClipboard Clip = new SharpClipboard();
+        readonly SharpClipboard CLipboard = new SharpClipboard();
 
         public PostView()
         {
             InitializeComponent();
-            Clip.MonitorClipboard = true;
-            Clip.ObservableFormats.Files = false;
-            Clip.ObservableFormats.Images = false;
-            Clip.ObservableFormats.Others = false;
-            Clip.ObservableFormats.Texts = true;
-            Clip.ClipboardChanged += Clip_ClipboardChanged;
+            
         }
 
         private void Clip_ClipboardChanged(object sender, SharpClipboard.ClipboardChangedEventArgs e)
         {
-            var Value = e.Content.ToString();
+            //var Value = e.Content.ToString();
             FormatText();
         }
 
@@ -60,8 +55,15 @@ namespace AutoPublisherWP.Views
             {
                 xml.LoadXml($"<div>{ClipText}</div>");
             }
-            catch (Exception)
+
+            catch (XmlException e)
             {
+                ContentText.Document = new FlowDocument();
+                ContentText.AppendText($"msg: {e.Message}");
+                ContentText.AppendText(Environment.NewLine);
+                ContentText.AppendText($"linea: {e.LineNumber}");
+                ContentText.AppendText(Environment.NewLine);
+                ContentText.AppendText($"posicion: {e.LinePosition}");
                 return;
             }
             string Title = "";
@@ -84,19 +86,20 @@ namespace AutoPublisherWP.Views
             TitleText.Document = new FlowDocument();
             TitleText.AppendText(Title);
             ContentText.Document = new FlowDocument();
-            ContentText.AppendText(xml.InnerXml);
+            ContentText.AppendText(xml.InnerXml
+                .Replace("<span>","")
+                .Replace("</span>","")
+                .Replace("<p><br></br></p>", ""));
         }
 
         private string NormalizeXML(string XML)
         {
             string ReplaceTo = "<br></br>";
-            string ReplaceFrom = "";
             string TextToSearch = "<br ";
-            int start = 0;
-            start = XML.IndexOf(TextToSearch);
-            while(start > -1)
+            int start = XML.IndexOf(TextToSearch);
+            while (start > -1)
             {
-                ReplaceFrom  = XML.Substring(start, XML.IndexOf(">", start) - start +1);
+                string ReplaceFrom = XML.Substring(start, XML.IndexOf(">", start) - start + 1);
                 XML = XML.Replace(ReplaceFrom, ReplaceTo);
                 start = XML.IndexOf(TextToSearch);
             }
@@ -108,6 +111,25 @@ namespace AutoPublisherWP.Views
             ThisViewModel = VM;
             this.DataContext = VM;
             VM.ChangeImage += ChangeImage;
+            VM.AutoClipboardChange += AutoClipboardChange;
+        }
+
+        private void AutoClipboardChange()
+        {
+            if (ThisViewModel.AutoCopyFromClipboard)
+            {
+                CLipboard.MonitorClipboard = true;
+                CLipboard.ObservableFormats.Files = false;
+                CLipboard.ObservableFormats.Images = false;
+                CLipboard.ObservableFormats.Others = false;
+                CLipboard.ObservableFormats.Texts = true;
+                CLipboard.ClipboardChanged += Clip_ClipboardChanged;
+            }
+            else
+            {
+                CLipboard.ClipboardChanged -= Clip_ClipboardChanged;
+                CLipboard.Dispose();
+            }
         }
 
         private void UploadButton_Click(object sender, RoutedEventArgs e)

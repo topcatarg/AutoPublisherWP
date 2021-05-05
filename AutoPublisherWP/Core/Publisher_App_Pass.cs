@@ -1,15 +1,19 @@
-﻿using AutoPublisherWP.Models;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
+using AutoPublisherWP.Interfaces;
+using AutoPublisherWP.Models;
 using WordPressPCL;
 using WordPressPCL.Models;
 using WordPressPCL.Utility;
-using AutoPublisherWP.Interfaces;
 
 namespace AutoPublisherWP.Core
 {
-    public class Publisher: IPublisher
+    public class Publisher_App_Pass : IPublisher
     {
+
         public SiteList Connection { get; set; }
 
         private WordPressClient client;
@@ -18,9 +22,23 @@ namespace AutoPublisherWP.Core
 
         private MediaItem Image;
 
-        public Publisher()
+        public async Task CheckImage()
         {
-            
+            await TestConnection();
+            MediaQueryBuilder q = new MediaQueryBuilder
+            {
+                Slugs = new string[]
+                {
+                    "2020-09-20-celulares"
+                }
+            };
+            var items = await client.Media.Query(q);
+            if (items.Count() > 1)
+            {
+                Connection.Message = "mas de un elemento encontrado";
+                return;
+            }
+            //var m = items.First();
         }
 
         public async Task Publish()
@@ -56,25 +74,6 @@ namespace AutoPublisherWP.Core
             Connection.State = true;
         }
 
-        public async Task TestConnection()
-        {
-            Connection.Message = "Iniciando testeo";
-            string baseURL = Connection.SiteUrl + "wp-json";
-            client = new WordPressClient(baseURL)
-            {
-                AuthMethod = WordPressPCL.Models.AuthMethod.JWTAuth
-            };
-            client.GetToken();
-            await client.RequestJWToken(Connection.User, Connection.Password);
-            Connection.Tested = await client.IsValidJWToken();
-            Connection.Message = "Testeo finalizado";
-        }
-
-        private async Task PushImage()
-        {
-            Image = await client.Media.Create(Post.ImageURI.LocalPath, System.IO.Path.GetFileName(Post.ImageURI.LocalPath));
-        }
-
         private async Task PublishPost()
         {
             var NuevoPost = new WordPressPCL.Models.Post()
@@ -98,23 +97,49 @@ namespace AutoPublisherWP.Core
             _ = await client.Posts.Create(NuevoPost);
         }
 
-        public async Task CheckImage()
+        private async Task PushImage()
         {
-            await TestConnection();
-            MediaQueryBuilder q = new MediaQueryBuilder
+            Image = await client.Media.Create(Post.ImageURI.LocalPath, System.IO.Path.GetFileName(Post.ImageURI.LocalPath));
+        }
+
+        public async Task TestConnection()
+        {
+            Connection.Tested = false;
+            Connection.Message = "Iniciando testeo";
+            string baseURL = Connection.SiteUrl + "wp-json";
+            client = new WordPressClient(baseURL)
             {
-                Slugs = new string[]
-                {
-                    "2020-09-20-celulares"
-                }
+                AuthMethod = AuthMethod.ApplicationPassword,
+                UserName = Connection.User
             };
-            var items = await client.Media.Query(q);
-            if (items.Count() > 1)
+            client.SetApplicationPassword(Connection.Password);
+            var post = new WordPressPCL.Models.Post()
             {
-                Connection.Message = "mas de un elemento encontrado";
+                Title = new Title("Title 1"),
+                Content = new Content("Content PostCreate")
+            };
+            WordPressPCL.Models.Post postCreated;
+            try
+            {
+                postCreated = await client.Posts.Create(post);
+            }
+            catch(Exception e)
+            {
+                Connection.Message = e.Message;
+                return ;
+            }
+            bool deleted;
+            try
+            {
+                deleted = await client.Posts.Delete(postCreated.Id, true);
+            }
+            catch (Exception e)
+            {
+                Connection.Message = e.Message;
                 return;
             }
-            //var m = items.First();
+            Connection.Tested = true;
+            Connection.Message = "Testeo finalizado";
         }
     }
 }

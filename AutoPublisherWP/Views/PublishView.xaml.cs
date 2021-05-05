@@ -73,7 +73,8 @@ namespace AutoPublisherWP.Views
             {
                 if (v.IsChecked)
                 {
-                    Publisher p = new Publisher()
+                    //Publisher p = new Publisher()
+                    Publisher_App_Pass p = new Publisher_App_Pass()
                     {
                         Connection = v
                     };
@@ -108,7 +109,8 @@ namespace AutoPublisherWP.Views
             {
                 if (v.IsChecked)
                 {
-                    Publisher p = new Publisher()
+                    //Publisher p = new Publisher()
+                    Publisher_App_Pass p = new Publisher_App_Pass()
                     {
                         Connection = v,
                         Post = Post
