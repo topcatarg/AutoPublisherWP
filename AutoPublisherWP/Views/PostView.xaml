@@ -10,14 +10,45 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid x:Name="Grilla">
         <Grid.RowDefinitions>
-            <RowDefinition Height="2*"/>
-            <RowDefinition/>
-            <RowDefinition Height="3*"/>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="129*"/>
+            <RowDefinition Height="64*"/>
+            <RowDefinition Height="193*"/>
         </Grid.RowDefinitions>
-        <Grid x:Name="ImageGrid" Grid.Row="0" Margin="5,5">
+        <Grid x:Name="ConfigGrid" Grid.Row="0" Margin="5,5">
+            <Grid x:Name="ConfigInternalGrid">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="auto"/>
+                </Grid.ColumnDefinitions>
+                <Button x:Name="BtnRutaImagenes"
+                    Grid.Column="2"
+                    Content="Ruta Archivos"
+                    Click="BtnRutaImagenes_Click"/>
+                <Label x:Name="LblRutaImagenes"
+                   Content="{Binding WatchedFolder, UpdateSourceTrigger=PropertyChanged}"
+                   Grid.Column="3"
+                   VerticalAlignment="Center"
+                   />
+                <Label 
+                    Content="Pegar automaticamente" 
+                    Grid.Column="0"
+                    Margin="5"
+                       />
+                <CheckBox 
+                    Grid.Column="1" 
+                    Margin="5"
+                    IsChecked="{Binding AutoCopyFromClipboard,UpdateSourceTrigger=PropertyChanged}"
+                    />
+            </Grid>
+        </Grid>
+        <Grid x:Name="ImageGrid" Grid.Row="1" Margin="5,5">
             <Grid.RowDefinitions>
-                <RowDefinition/>
-                <RowDefinition/>
                 <RowDefinition/>
                 <RowDefinition/>
                 <RowDefinition/>
@@ -41,12 +72,6 @@
                    Margin="5,5" 
                    Grid.RowSpan="4"
                    Grid.Column="1"/>
-            <Label x:Name="LblRutaImagenes"
-                   Grid.Row="4"
-                   Grid.Column="1"
-                   Content="{Binding WatchedFolder, UpdateSourceTrigger=PropertyChanged}"
-                   >
-            </Label>
             <Button x:Name="UploadButton" 
                     Content="Cargar Imagen" 
                     Grid.Column="2" 
@@ -58,21 +83,8 @@
                       Grid.Column="3" 
                       Margin="5,5"
                       IsChecked="{Binding Post.WithoutImage,UpdateSourceTrigger=PropertyChanged}"/>
-            <CheckBox 
-                    x:Name="ChkAutoImage"
-                    Content="Imagenes Automaticas"
-                    Grid.Column="2" 
-                    Grid.Row="3"
-                    Margin="5,5"
-                    IsChecked="{Binding AutoImage, UpdateSourceTrigger=PropertyChanged}">
-            </CheckBox>
-            <Button x:Name="BtnRutaImagenes"
-                    Grid.Column="2"
-                    Grid.Row="4"
-                    Content="Ruta Archivos"
-                    Margin="5,5" Click="BtnRutaImagenes_Click"></Button>
         </Grid>
-        <Grid x:Name="TitleGrid" Grid.Row="1" >
+        <Grid x:Name="TitleGrid" Grid.Row="2" >
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
@@ -90,7 +102,7 @@
             <Button x:Name="DeleteTitleButton" Content="Borrar esta texto" Grid.Column="1"  Margin="5,5"  Click="DeleteTitleButton_Click"/>
             <Button x:Name="DeleteAndCopyButton" Content="Borrar y pegar" Grid.Column="1" Grid.Row="1"  Margin="5,5" Click="DeleteAndCopyButton_Click"  />
         </Grid>
-        <Grid x:Name="ContentGrid" Grid.Row="2">
+        <Grid x:Name="ContentGrid" Grid.Row="3">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>

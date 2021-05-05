@@ -63,18 +63,6 @@ namespace AutoPublisherWP.ViewModels
             }
         }
 
-        private Boolean autoimage = false;
-        public Boolean AutoImage
-        {
-            get => autoimage;
-            set
-            {
-                autoimage = value;
-                OnPropertyChanged();
-                RefreshAutoImageState();
-            }
-        }
-
         private string watchedfolder = "Seleccionar una carpeta";
         public string WatchedFolder
         {
@@ -88,9 +76,22 @@ namespace AutoPublisherWP.ViewModels
         }
 
         public System.Windows.Controls.Image ImageControl { get; set; }
+
+        private bool autoCopyFromClipboard;
+        public bool AutoCopyFromClipboard
+        {
+            get => autoCopyFromClipboard;
+            set
+            {
+                autoCopyFromClipboard = value;
+                OnPropertyChanged();
+                AutoClipboardChange?.Invoke();
+            }
+        }
         #endregion
 
         public Action<String> ChangeImage;
+        public Action AutoClipboardChange;
 
         public MainWindowVM()
         {
@@ -110,7 +111,7 @@ namespace AutoPublisherWP.ViewModels
         private FileSystemWatcher Fs = null;
         public void RefreshAutoImageState()
         {
-            if (Fs == null && autoimage && Directory.Exists(watchedfolder))
+            if (Fs == null && Directory.Exists(watchedfolder))
             {
                 //Start the watcher
                 Fs = new FileSystemWatcher(watchedfolder)
@@ -123,7 +124,7 @@ namespace AutoPublisherWP.ViewModels
                 Fs.EnableRaisingEvents = true;
 
             }
-            else if(!autoimage && Fs != null)
+            else if(Fs != null)
             {
                 //kill the watcher
                 Fs.Created -= OnCreated;
