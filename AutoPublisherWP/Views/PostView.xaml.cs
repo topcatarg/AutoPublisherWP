@@ -161,6 +161,11 @@ namespace AutoPublisherWP.Views
                     ThisViewModel.Post.ImageURI = null;
                     return;
                 }
+                catch (NotSupportedException)
+                {
+                    ThisViewModel.Post.ImageURI = null;
+                    return;
+                }
                 ImageControl.Source = image;
                 ThisViewModel.Post.ImageURI = new Uri(ImageSource);
                 //Now we try to get the date from the file

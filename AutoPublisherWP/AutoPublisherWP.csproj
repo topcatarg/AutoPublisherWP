@@ -194,6 +194,7 @@
     <Compile Include="Interfaces\IPublisher.cs" />
     <Compile Include="Models\Category.cs" />
     <Compile Include="Models\Post.cs" />
+    <Compile Include="Models\PostInfo.cs" />
     <Compile Include="Models\Site.cs" />
     <Compile Include="Models\SiteList.cs" />
     <Compile Include="ViewModels\ConfigVM.cs" />

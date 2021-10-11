@@ -156,5 +156,19 @@ namespace AutoPublisherWP.Views
             }
             ButtonEnable(true);
         }
+
+        private void BtnGetPostList_Click(object sender, RoutedEventArgs e)
+        {
+            foreach (Models.SiteList v in ThisVM.Sites)
+            {
+                v.CategoryList.Clear();
+                if (v.IsChecked)
+                {
+                    //Obtener la lista de posts
+                    SiteData sd = new SiteData() { Connection = v };
+                    var result = sd.GetPostsAsync();
+                }
+            }
+        }
     }
 }

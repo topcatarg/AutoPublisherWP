@@ -28,6 +28,7 @@
                     <RowDefinition/>
                     <RowDefinition/>
                     <RowDefinition/>
+                    <RowDefinition/>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="3*"/>
@@ -41,7 +42,7 @@
                     CanUserAddRows="False" 
                     CanUserDeleteRows="False" 
                     CanUserResizeRows="False" 
-                    Grid.RowSpan="4" 
+                    Grid.RowSpan="5" 
                     ItemsSource="{Binding Sites}" CanUserReorderColumns="False" CanUserResizeColumns="False" CanUserSortColumns="False"
                     >
                     <DataGrid.Columns>
@@ -105,16 +106,20 @@
                         Grid.Column="1" 
                         Margin="5,5" 
                         Grid.Row="1" Click="BtnUncheckAll_Click" />
+                <Button x:Name="BtnGetPostList" Content="Bajar lista" 
+                        Grid.Column="1" 
+                        Margin="5,5" 
+                        Grid.Row="2" Click="BtnGetPostList_Click" />
                 <Button x:Name="BtnTest" 
                     Content="Testear sitios"
                         Grid.Column="1"
                         Margin="5,5"
-                        Grid.Row="2" Click="BtnTest_Click"/>
+                        Grid.Row="3" Click="BtnTest_Click"/>
                 <Button x:Name="BtnPublish"
                     Content="Publicar" 
                         Grid.Column="1" 
                         Margin="5,5"
-                        Grid.Row="3" 
+                        Grid.Row="4" 
                         Click="BtnPublish_Click"
                         />
 
